@@ -63,3 +63,23 @@ export const Login = async (req, res) => {
     console.log(error);
   }
 };
+
+export const Me = async (req, res) => {
+  const { userId } = req.userId;
+
+  try {
+    if (!userId) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ message: "User retrieved successfully", user });
+  } catch (error) {
+    console.error("Error retrieving user data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

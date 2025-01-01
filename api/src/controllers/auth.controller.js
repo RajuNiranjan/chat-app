@@ -1,6 +1,7 @@
 import { UserModel } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { genToken } from "../utils/genToken.js";
+import cloudinary from "../utils/cloudinary.js";
 
 export const Register = async (req, res) => {
   const { email, userName, password } = req.body;
@@ -77,7 +78,41 @@ export const Me = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({ message: "User retrieved successfully", user });
+
+    const userRes = user.toObject();
+    delete userRes.password;
+
+    res
+      .status(200)
+      .json({ message: "User retrieved successfully", user: userRes });
+  } catch (error) {
+    console.error("Error retrieving user data:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const UpdateProfile = async (req, res) => {
+  const { userId } = req.userId;
+  const { profilePicture } = req.body;
+  try {
+    if (!profilePicture) {
+      return res.status(400).json({ message: "profile pic is required" });
+    }
+    const uploadRes = await cloudinary.uploader.upload(profilePicture);
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        profilePicture: uploadRes.secure_url,
+      },
+      { new: true }
+    );
+
+    const userRes = updatedUser.toObject();
+    delete userRes.password;
+
+    return res
+      .status(200)
+      .json({ message: "profile pic updated successfully", user: userRes });
   } catch (error) {
     console.error("Error retrieving user data:", error);
     res.status(500).json({ message: "Internal server error" });

@@ -40,7 +40,7 @@ export const Login = async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   try {
     const user = await UserModel.findOne({
-      $or: [{ email: userNameOrEmail }, { username: userNameOrEmail }],
+      $or: [{ email: userNameOrEmail }, { userName: userNameOrEmail }],
     });
 
     if (!user) {

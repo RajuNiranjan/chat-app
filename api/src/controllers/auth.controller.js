@@ -28,7 +28,32 @@ export const Register = async (req, res) => {
 
     return res
       .status(201)
-      .json({ message: "User register successfully", token: token });
+      .json({ message: "User register successfully", token });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const Login = async (req, res) => {
+  const { userNameOrEmail, password } = req.body;
+  if (!userNameOrEmail || !password)
+    return res.status(400).json({ message: "All fields are required" });
+  try {
+    const user = await UserModel.findOne({
+      $or: [{ email: userNameOrEmail }, { username: userNameOrEmail }],
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User not found with this email or username" });
+    }
+
+    const token = genToken(user._id);
+
+    return res
+      .status(200)
+      .json({ message: "User logged in successfully", token });
   } catch (error) {
     console.log(error);
   }

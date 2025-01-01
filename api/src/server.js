@@ -3,6 +3,7 @@ import cors from "cors";
 import { ENV_VAR } from "./utils/envVar.js";
 import "./config/db.js";
 import { AuthRouter } from "./routes/auth.route.js";
+import { MessageRouter } from "./routes/message.route.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) =>
 );
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/message", MessageRouter);
 
 app.listen(
   ENV_VAR.PORT,

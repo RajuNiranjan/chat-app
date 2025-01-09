@@ -10,7 +10,7 @@ const ConnectDB = async (req, res, next) => {
       .then(() => console.log("server connected to Data base"));
   } catch (error) {
     console.log(error);
-    next(ErrorMiddleware(error));
+    next(error);
   }
 };
 ConnectDB();

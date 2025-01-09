@@ -1,41 +1,49 @@
 import { useState } from "react";
-import {
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  MessageSquare,
-  User,
-} from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, MessageSquare, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthImagePattern from "../components/AuthImagePattern";
+import { useAuthStore } from "../store/useAuthStore";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const { isLoading, signup } = useAuthStore();
+
+  const [formData, setFormData] = useState({
+    userName: "",
+    email: "",
+    password: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    signup(formData);
   };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      {/* left side */}
-
+      {/* Left Side */}
       <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
       />
-      {/* right side */}
+      {/* Right Side */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* LOGO */}
+          {/* Logo and Header */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
                 className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-              group-hover:bg-primary/20 transition-colors"
-              >
+                group-hover:bg-primary/20 transition-colors">
                 <MessageSquare className="size-6 text-primary" />
               </div>
               <h1 className="text-2xl font-bold mt-2">Create Account</h1>
@@ -45,6 +53,7 @@ const SignUpPage = () => {
             </div>
           </div>
 
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
@@ -56,8 +65,11 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
-                  className={`input input-bordered w-full pl-10`}
+                  name="userName"
+                  className="input input-bordered w-full pl-10"
                   placeholder="John Doe"
+                  value={formData.userName}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -72,8 +84,11 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="email"
-                  className={`input input-bordered w-full pl-10`}
+                  name="email"
+                  className="input input-bordered w-full pl-10"
                   placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
@@ -88,14 +103,16 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`input input-bordered w-full pl-10`}
+                  name="password"
+                  className="input input-bordered w-full pl-10"
                   placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleInputChange}
                 />
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
+                  onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? (
                     <EyeOff className="size-5 text-base-content/40" />
                   ) : (
@@ -106,7 +123,7 @@ const SignUpPage = () => {
             </div>
 
             <button type="submit" className="btn btn-primary w-full">
-              Create Account
+              {isLoading ? "loading..." : "Create Account"}
             </button>
           </form>
 
@@ -123,4 +140,5 @@ const SignUpPage = () => {
     </div>
   );
 };
+
 export default SignUpPage;

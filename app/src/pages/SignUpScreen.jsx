@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 
 const SignUpScreen = () => {
-  const { register } = useAuthStore();
+  const { signUp } = useAuthStore();
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -17,7 +17,7 @@ const SignUpScreen = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    register(formData);
+    signUp(formData);
   };
 
   return (

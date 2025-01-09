@@ -2,20 +2,20 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import SignUpScreen from "./pages/SignUpScreen";
 import LogInScreen from "./pages/LogInScreen";
-import { useAuthStore } from "./store/useAuthStore";
 import HomeScreen from "./pages/HomeScreen";
-import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { useAuthStore } from "./store/useAuthStore";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { getUser, user, isLoading } = useAuthStore();
-  console.log("user", user);
+  const { checkAuth, isLoading, authUser } = useAuthStore();
+  console.log("authUser", authUser);
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    checkAuth();
+  }, [checkAuth]);
 
-  if (isLoading && !user)
+  if (isLoading && !authUser)
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
@@ -27,15 +27,15 @@ const App = () => {
       <Routes>
         <Route
           path="/signup"
-          element={user ? <Navigate to="/" /> : <SignUpScreen />}
+          element={authUser ? <Navigate to="/" /> : <SignUpScreen />}
         />
         <Route
           path="/login"
-          element={user ? <Navigate to="/" /> : <LogInScreen />}
+          element={authUser ? <Navigate to="/" /> : <LogInScreen />}
         />
         <Route
           path="/"
-          element={user ? <HomeScreen /> : <Navigate to="/login" />}
+          element={authUser ? <HomeScreen /> : <Navigate to="/login" />}
         />
       </Routes>
       <Toaster />

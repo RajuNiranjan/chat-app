@@ -1,18 +1,30 @@
 import { create } from "zustand";
 import { axiosInstance } from "../utils/axios";
 import { toast } from "react-hot-toast";
-
 export const useAuthStore = create((set, get) => ({
+  authUser: null,
   isLoading: false,
-  user: null,
 
-  register: async (formData) => {
+  checkAuth: async () => {
+    const token = localStorage.getItem("chat-app");
+    if (token) {
+      const res = await axiosInstance.get("/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set({ authUser: res.data.user });
+    }
+  },
+
+  signUp: async (formData) => {
     set({ isLoading: true });
+    const { checkAuth } = get();
     try {
-      const res = await axiosInstance.post("/auth/register", formData);
+      const res = await axiosInstance.post("/auth/signup", formData);
       localStorage.setItem("chat-app", res.data.token);
       set({ isLoading: false });
+      checkAuth();
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
       set({ isLoading: false });
     }
@@ -20,11 +32,14 @@ export const useAuthStore = create((set, get) => ({
 
   login: async (formData) => {
     set({ isLoading: true });
+    const { checkAuth } = get();
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       localStorage.setItem("chat-app", res.data.token);
       set({ isLoading: false });
+      checkAuth();
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
       set({ isLoading: false });
     }
@@ -32,17 +47,8 @@ export const useAuthStore = create((set, get) => ({
 
   logout: () => {
     localStorage.removeItem("chat-app");
-    set({ user: null });
-  },
-
-  getUser: async () => {
-    const token = localStorage.getItem("chat-app");
-    console.log("token", token);
-    if (token) {
-      const res = await axiosInstance.get("/auth/me", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      set({ user: res.data.user });
-    }
+    set({ authUser: null });
+    const { checkAuth } = get();
+    checkAuth();
   },
 }));

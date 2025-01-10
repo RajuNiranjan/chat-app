@@ -4,6 +4,7 @@ import { ENV_VAR } from "./utils/env.js";
 import express from "express";
 import cors from "cors";
 import { AuthRouter } from "./routes/auth.route.js";
+import { MessageRouter } from "./routes/message.route.js";
 
 const PORT = ENV_VAR.PORT || 5000;
 
@@ -16,6 +17,7 @@ app.use(
 );
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/message", MessageRouter);
 
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

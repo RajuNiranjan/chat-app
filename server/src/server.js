@@ -6,6 +6,9 @@ import cookieParser from "cookie-parser";
 import { AuthRouter } from "./routes/auth.route.js";
 import { MessageRouter } from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
+import path from "path";
+
+const __dirName = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -18,6 +21,14 @@ app.use(
 
 app.use("/api/auth", AuthRouter);
 app.use("/api/messages", MessageRouter);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirName, "../../app/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirName, "../../app", "dist", "index.html"));
+  });
+}
 
 server.listen(ENV_VAR.PORT, () => {
   console.log("server is running on PORT:" + ENV_VAR.PORT);

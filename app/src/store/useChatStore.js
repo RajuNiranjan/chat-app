@@ -1,64 +1,90 @@
 import { create } from "zustand";
-import { axiosInstance } from "../utils/axios";
+import toast from "react-hot-toast";
+import AxiosInstance from "../lib/axios";
+import { useAuthStore } from "./useAuthStore";
 
-const token = localStorage.getItem("chat-app");
-
-export const useChatStore = create((set, get) => ({
+const useChatStore = create((set, get) => ({
   messages: [],
   users: [],
-  isMessagesLoading: false,
-  isUsersLoading: false,
   selectedUser: null,
+  isUsersLoading: false,
+  isMessagesLoading: false,
 
-  getAllUsers: async () => {
+  getUsers: async () => {
     set({ isUsersLoading: true });
     try {
-      const res = await axiosInstance.get("/message/all", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      console.log("get all uses", res.data);
-
+      const res = await AxiosInstance.get("/messages/users");
       set({ users: res.data });
-      set({ isUsersLoading: false });
     } catch (error) {
       console.log(error);
+    } finally {
       set({ isUsersLoading: false });
     }
   },
 
-  getMessages: async (receiverId) => {
+  getMessages: async (userId) => {
     set({ isMessagesLoading: true });
-
     try {
-      const res = axiosInstance.get(`message/${receiverId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
+      const res = await AxiosInstance.get(`/messages/${userId}`);
       set({ messages: res.data });
-      set({ isMessagesLoading: false });
     } catch (error) {
       console.log(error);
+    } finally {
       set({ isMessagesLoading: false });
     }
+  },
+
+  setSelectedUser: (selectedUser) => {
+    console.log("selectedUser", selectedUser);
+    set({ selectedUser: selectedUser });
   },
 
   sendMessage: async (messageData) => {
-    const { selectedUser } = get();
-    try {
-      const res = await axiosInstance.post(
-        `/message/send/${selectedUser._id}`,
-        { messageData },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    const { selectedUser, messages } = get();
+    if (!selectedUser) {
+      throw new Error("No user selected");
+    }
 
-      set({ messages: [...get().messages, res.data] });
+    console.log("selectedUser to send message", selectedUser);
+
+    set({ isSendingMessage: true });
+    try {
+      const res = await AxiosInstance.post(
+        `/messages/send/${selectedUser._id}`,
+        messageData
+      );
+      console.log("res", res);
+
+      set({ messages: [...messages, res.data] });
     } catch (error) {
       console.log(error);
+      throw error;
+    } finally {
+      set({ isSendingMessage: false });
     }
   },
 
-  setSelectedUser: (selectedUser) => set({ selectedUser }),
+  subscribeToMessages: () => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+
+    const socket = useAuthStore.getState().socket;
+
+    socket.on("newMessage", (newMessage) => {
+      const isMessageSentFromSelectedUser =
+        newMessage.senderId === selectedUser._id;
+      if (!isMessageSentFromSelectedUser) return;
+
+      set({
+        messages: [...get().messages, newMessage],
+      });
+    });
+  },
+
+  unsubscribeFromMessages: () => {
+    const socket = useAuthStore.getState().socket;
+    socket.off("newMessage");
+  },
 }));
+
+export default useChatStore;

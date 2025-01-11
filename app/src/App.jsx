@@ -1,42 +1,50 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import HomeScreen from "./pages/HomeScree";
+import LoginScreen from "./pages/LoginScreen";
 import SignUpScreen from "./pages/SignUpScreen";
-import LogInScreen from "./pages/LogInScreen";
-import HomeScreen from "./pages/HomeScreen";
-import { Loader } from "lucide-react";
+import ProfileScreen from "./pages/ProfileScreen";
+import SettingsScreen from "./pages/SettingsScreen";
 import { useAuthStore } from "./store/useAuthStore";
+import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { checkAuth, isLoading, authUser } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   console.log("authUser", authUser);
 
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, []);
 
-  if (isLoading && !authUser)
+  if (isCheckingAuth)
     return (
       <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
+        <Loader className="w-10 h-10 animate-spin" />
       </div>
     );
-
   return (
     <>
+      <NavBar />
       <Routes>
-        <Route
-          path="/signup"
-          element={authUser ? <Navigate to="/" /> : <SignUpScreen />}
-        />
-        <Route
-          path="/login"
-          element={authUser ? <Navigate to="/" /> : <LogInScreen />}
-        />
         <Route
           path="/"
           element={authUser ? <HomeScreen /> : <Navigate to="/login" />}
         />
+        <Route
+          path="/login"
+          element={!authUser ? <LoginScreen /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/signup"
+          element={!authUser ? <SignUpScreen /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/profile"
+          element={authUser ? <ProfileScreen /> : <Navigate to="/login" />}
+        />
+        <Route path="/settings" element={<SettingsScreen />} />
       </Routes>
       <Toaster />
     </>

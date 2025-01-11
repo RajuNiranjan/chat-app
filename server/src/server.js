@@ -1,24 +1,25 @@
-import { app, io, server } from "./lib/socket.js";
-import "./config/db.js";
-import { ENV_VAR } from "./utils/env.js";
 import express from "express";
 import cors from "cors";
+import { ENV_VAR } from "./lib/env.js";
+import { connectDB } from "./lib/db.js";
+import cookieParser from "cookie-parser";
 import { AuthRouter } from "./routes/auth.route.js";
 import { MessageRouter } from "./routes/message.route.js";
-
-const PORT = ENV_VAR.PORT || 5000;
+import { app, server } from "./lib/socket.js";
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(
   cors({
     origin: ENV_VAR.CORS_ORIGIN,
-    withCredentials: true,
+    credentials: true,
   })
 );
 
 app.use("/api/auth", AuthRouter);
-app.use("/api/message", MessageRouter);
+app.use("/api/messages", MessageRouter);
 
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(ENV_VAR.PORT, () => {
+  console.log("server is running on PORT:" + ENV_VAR.PORT);
+  connectDB();
 });

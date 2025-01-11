@@ -1,67 +1,62 @@
-import { Message } from "../models/message.model.js";
 import { User } from "../models/user.model.js";
+import { Message } from "../models/message.model.js";
+import { io, getReceiverSocketId } from "../lib/socket.js";
 
-export const sendMessage = async (req, res) => {
-  const { message, image } = req.body;
-  const senderId = req.userId;
-  const receiverId = req.params.receiverId;
-
+export const getUsersForSidebar = async (req, res) => {
   try {
-    if (!message) {
-      return res.status(400).json({ message: "message is required" });
-    }
+    const loggedInUserId = req.user._id;
+    const filteredUsers = await User.find({
+      _id: { $ne: loggedInUserId },
+    }).select("-password");
 
-    const receiver = await User.findById(receiverId);
-    if (!receiver) {
-      return res.status(404).json({ message: "receiver not found" });
-    }
-
-    const newMessage = new Message({
-      senderId,
-      receiverId,
-      message,
-      image,
-    });
-
-    await newMessage.save();
-
-    res.status(201).json({
-      message: "message sent successfully",
-      newMessage,
-    });
+    res.status(200).json(filteredUsers);
   } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ message: "Error sending message" });
-  }
-};
-
-export const getAllUsers = async (req, res) => {
-  try {
-    const allUsers = await User.find({ _id: { $ne: req.userId } }).select(
-      "-password"
-    );
-    res.status(200).json(allUsers);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error in getUsersForSidebar: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 export const getMessages = async (req, res) => {
-  const senderId = req.userId;
-  const receiverId = req.params.receiverId;
-
   try {
+    const { id: userToChatId } = req.params;
+    const myId = req.user._id;
+
     const messages = await Message.find({
       $or: [
-        { senderId, receiverId },
-        { senderId: receiverId, receiverId: senderId },
+        { senderId: myId, receiverId: userToChatId },
+        { senderId: userToChatId, receiverId: myId },
       ],
     });
 
     res.status(200).json(messages);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.log("Error in getMessages controller: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const sendMessage = async (req, res) => {
+  try {
+    const { text } = req.body;
+    const { id: receiverId } = req.params;
+    const senderId = req.user._id;
+
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      text,
+    });
+
+    await newMessage.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
+
+    res.status(201).json(newMessage);
+  } catch (error) {
+    console.log("Error in sendMessage controller: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

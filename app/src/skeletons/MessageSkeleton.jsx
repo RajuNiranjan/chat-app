@@ -1,5 +1,4 @@
 const MessageSkeleton = () => {
-  // Create an array of 6 items for skeleton messages
   const skeletonMessages = Array(6).fill(null);
 
   return (
@@ -7,7 +6,8 @@ const MessageSkeleton = () => {
       {skeletonMessages.map((_, idx) => (
         <div
           key={idx}
-          className={`chat ${idx % 2 === 0 ? "chat-start" : "chat-end"}`}>
+          className={`chat ${idx % 2 === 0 ? "chat-start" : "chat-end"}`}
+        >
           <div className="chat-image avatar">
             <div className="size-10 rounded-full">
               <div className="skeleton w-full h-full rounded-full" />

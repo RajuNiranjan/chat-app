@@ -1,13 +1,18 @@
 import express from "express";
+
+import { protectRoute } from "../middleware/auth.middleware.js";
 import {
-  GetMe,
-  LoginUser,
-  RegisterUser,
+  checkAuth,
+  login,
+  logout,
+  signUp,
+  updateProfile,
 } from "../controllers/auth.controller.js";
-import { verifyToken } from "../middlewares/verifyToken.js";
 
 export const AuthRouter = express.Router();
 
-AuthRouter.post("/register", RegisterUser);
-AuthRouter.post("/login", LoginUser);
-AuthRouter.get("/me", verifyToken, GetMe);
+AuthRouter.post("/signup", signUp);
+AuthRouter.post("/login", login);
+AuthRouter.post("/logout", logout);
+AuthRouter.put("/update-profile", protectRoute, updateProfile);
+AuthRouter.get("/check", protectRoute, checkAuth);

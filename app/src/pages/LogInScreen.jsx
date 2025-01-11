@@ -1,26 +1,18 @@
-import { useState } from "react";
-import { Eye, EyeOff, Lock, Mail, MessageSquare } from "lucide-react";
-import { Link } from "react-router-dom";
-import AuthImagePattern from "../components/AuthImagePattern";
+import { MessageSquare, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { NavLink } from "react-router-dom";
+import AuthImagePattern from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
 
-const LogInPage = () => {
+const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isLoading, login } = useAuthStore();
-
   const [formData, setFormData] = useState({
-    emailOrUserName: "",
+    email: "",
     password: "",
   });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const { login, isLoggingIn } = useAuthStore();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,47 +21,33 @@ const LogInPage = () => {
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      {/* Left Side */}
-      <AuthImagePattern
-        title="Welcome back!"
-        subtitle="Sign in to continue your journey and stay connected with your network."
-      />
-
-      {/* Right Side */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <div className="flex flex-col items-center gap-2 group">
-              <div
-                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-                group-hover:bg-primary/20 transition-colors">
-                <MessageSquare className="size-6 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold mt-2">Sign In</h1>
-              <p className="text-base-content/60">
-                Welcome back! Please enter your details
-              </p>
-            </div>
+          <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+            <MessageSquare className="size-6 text-primary" />
           </div>
+          <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
+          <p className="text-sm text-muted-foreground">
+            Sign in to your account
+          </p>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
                 <span className="label-text font-medium">Email</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <Mail className="size-5 text-base-content/40" />
                 </div>
                 <input
-                  type="text"
-                  name="emailOrUserName"
+                  type="email"
+                  placeholder="Enter your email"
                   className="input input-bordered w-full pl-10"
-                  placeholder="you@example.com"
-                  value={formData.emailOrUserName}
-                  onChange={handleInputChange}
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   required
                 />
               </div>
@@ -80,22 +58,24 @@ const LogInPage = () => {
                 <span className="label-text font-medium">Password</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                   <Lock className="size-5 text-base-content/40" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  name="password"
-                  className="input input-bordered w-full pl-10"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
+                  className="input input-bordered w-full pl-10 pr-10"
                   value={formData.password}
-                  onChange={handleInputChange}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   required
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}>
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
                   {showPassword ? (
                     <EyeOff className="size-5 text-base-content/40" />
                   ) : (
@@ -105,24 +85,28 @@ const LogInPage = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full">
-              {isLoading ? "Loading..." : "Sign In"}
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? "Signing in..." : "Sign in"}
             </button>
           </form>
-
-          {/* Footer */}
-          <div className="text-center">
-            <p className="text-base-content/60">
-              Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
-                Create Account
-              </Link>
-            </p>
+          <div className="flex items-center gap-2">
+            <p>Don't have an account?</p>
+            <NavLink to="/signup" className="text-sm text-primary">
+              Sign up
+            </NavLink>
           </div>
         </div>
       </div>
+      <AuthImagePattern
+        title="Welcome Back!"
+        subtitle="Sign in to continue your journey with us."
+      />
     </div>
   );
 };
 
-export default LogInPage;
+export default LoginScreen;

@@ -7,7 +7,7 @@ import { useAuthStore } from "../store/useAuthStore";
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isLoading, signup } = useAuthStore();
+  const { isLoading, signUp } = useAuthStore();
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -25,7 +25,7 @@ const SignUpPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signup(formData);
+    signUp(formData);
   };
 
   return (

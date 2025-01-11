@@ -17,12 +17,12 @@ export const useAuthStore = create((set, get) => ({
 
   signUp: async (formData) => {
     set({ isLoading: true });
-    const { checkAuth } = get();
+
     try {
-      const res = await axiosInstance.post("/auth/signup", formData);
+      const res = await axiosInstance.post("/auth/register", formData);
       localStorage.setItem("chat-app", res.data.token);
       set({ isLoading: false });
-      checkAuth();
+      get().checkAuth();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);
@@ -32,12 +32,11 @@ export const useAuthStore = create((set, get) => ({
 
   login: async (formData) => {
     set({ isLoading: true });
-    const { checkAuth } = get();
     try {
       const res = await axiosInstance.post("/auth/login", formData);
       localStorage.setItem("chat-app", res.data.token);
       set({ isLoading: false });
-      checkAuth();
+      get().checkAuth();
     } catch (error) {
       console.log(error);
       toast.error(error.response.data.message);

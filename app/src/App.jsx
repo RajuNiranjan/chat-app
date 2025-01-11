@@ -2,13 +2,14 @@ import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import HomeScreen from "./pages/HomeScree";
-import LoginScreen from "./pages/LoginScreen";
+
 import SignUpScreen from "./pages/SignUpScreen";
 import ProfileScreen from "./pages/ProfileScreen";
 import SettingsScreen from "./pages/SettingsScreen";
 import { useAuthStore } from "./store/useAuthStore";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
+import LoginScreen from "./pages/LoginScreen";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();

@@ -74,8 +74,7 @@ const LoginScreen = () => {
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 flex items-center pr-3"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
+                  onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? (
                     <EyeOff className="size-5 text-base-content/40" />
                   ) : (
@@ -88,8 +87,7 @@ const LoginScreen = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={isLoggingIn}
-            >
+              disabled={isLoggingIn}>
               {isLoggingIn ? "Signing in..." : "Sign in"}
             </button>
           </form>

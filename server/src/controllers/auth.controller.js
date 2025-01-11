@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signUp = async (req, res) => {
-  const { email, userName, password } = req.body;
-  if (!userName || !email || !password) {
+  const { email, fullName, password } = req.body;
+  if (!fullName || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
@@ -15,10 +15,13 @@ export const signUp = async (req, res) => {
     const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(password, salt);
 
+    const avatar = `https://avatar.iran.liara.run/username?username=${fullName}`;
+
     const newUser = new User({
       email,
-      userName,
+      fullName,
       password: hashPassword,
+      profilePic: avatar,
     });
 
     if (newUser) {
@@ -27,7 +30,7 @@ export const signUp = async (req, res) => {
 
       res.status(201).json({
         _id: newUser._id,
-        userName: newUser.userName,
+        fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic,
       });
@@ -58,7 +61,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       _id: user._id,
-      userName: user.userName,
+      fullName: user.fullName,
       email: user.email,
       profilePic: user.profilePic,
     });

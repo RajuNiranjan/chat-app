@@ -11,12 +11,12 @@ const SignUpScreen = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    userName: "",
+    fullName: "",
   });
   const { signUp, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if (!formData.userName.trim()) return toast.error("Full name is required");
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
@@ -59,9 +59,9 @@ const SignUpScreen = () => {
                   type="text"
                   placeholder="Enter your full name"
                   className="input input-bordered w-full pl-10"
-                  value={formData.userName}
+                  value={formData.fullName}
                   onChange={(e) =>
-                    setFormData({ ...formData, userName: e.target.value })
+                    setFormData({ ...formData, fullName: e.target.value })
                   }
                   required
                 />

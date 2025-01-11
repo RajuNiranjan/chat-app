@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import useChatStore from "../store/useChatStore";
@@ -14,6 +14,8 @@ const ChatContainer = () => {
     unsubscribeFromMessages,
   } = useChatStore();
 
+  const messageEndRef = useRef(null);
+
   useEffect(() => {
     getMessages(selectedUser._id);
     subscribeToMessages();
@@ -24,6 +26,12 @@ const ChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   ]);
+
+  useEffect(() => {
+    if (messageEndRef.current && messages) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   if (isMessagesLoading) return <MessageSkeleton />;
 
@@ -45,7 +53,8 @@ const ChatContainer = () => {
             key={message._id}
             className={`chat ${
               message.senderId === selectedUser._id ? "chat-start" : "chat-end"
-            }`}>
+            }`}
+            ref={messageEndRef}>
             <div className="chat-bubble">
               {message.text}
               {message.image && (

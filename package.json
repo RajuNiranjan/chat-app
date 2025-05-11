@@ -1,0 +1,25 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix frontend && npm install --prefix backend && npm run build --prefix frontend",
+    "start": "npm run dev --prefix frontend & npm run start --prefix backend",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "app:dev": "npm run dev --prefix frontend",
+    "api:dev": "npm run dev --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RajuNiranjan/chat-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RajuNiranjan/chat-app/issues"
+  },
+  "homepage": "https://github.com/RajuNiranjan/chat-app#readme",
+  "description": ""
+}

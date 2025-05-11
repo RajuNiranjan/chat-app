@@ -79,7 +79,6 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
-
 export const logout = async (req, res, next) => {
   try {
     res.clearCookie("jwt");
@@ -100,7 +99,10 @@ export const checkAuth = async (req, res, next) => {
       throw new Error("user not found");
     }
 
-    return res.status(200).json(user);
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    return res.status(200).json(userResponse);
   } catch (error) {
     console.log(error);
     next(error);

@@ -1,7 +1,7 @@
 
-type user = {
+export type user = {
     _id: string;
-    username: string;
+    userName: string;
     email: string;
     profilePicture: string;
 }

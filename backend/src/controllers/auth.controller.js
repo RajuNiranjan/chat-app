@@ -89,6 +89,20 @@ export const logout = async (req, res, next) => {
   }
 };
 
+export const getUser = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const users = await UserModel.find({ _id: { $ne: userId } }).select(
+      "-password"
+    );
+
+    return res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 export const checkAuth = async (req, res, next) => {
   try {
     const { userId } = req.user;

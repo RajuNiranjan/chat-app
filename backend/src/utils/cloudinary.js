@@ -10,10 +10,3 @@ cloudinary.config({
   api_key: CLOUDINARY_API_KEY,
   api_secret: CLOUDINARY_API_SECRET,
 });
-
-export const uploadImage = async (imagePath) => {
-  const result = await cloudinary.uploader.upload(imagePath, {
-    folder: "profile",
-  });
-  return result.secure_url;
-};

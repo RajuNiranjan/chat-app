@@ -4,6 +4,7 @@ export type user = {
     userName: string;
     email: string;
     profilePicture: string;
+    createdAt: string;
 }
 
 export type authState = {

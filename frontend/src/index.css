@@ -1,1 +1,49 @@
 @import "tailwindcss";
+/* Custom Scrollbar Styling */
+@layer utilities {
+  /* For Webkit browsers (Chrome, Safari) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #818cf8;
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #c7d2fe #f1f1f1;
+  }
+
+  /* For Edge and IE */
+  *::-ms-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-ms-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  *::-ms-scrollbar-thumb {
+    background: #c7d2fe;
+    border-radius: 10px;
+  }
+
+  *::-ms-scrollbar-thumb:hover {
+    background: #818cf8;
+  }
+}

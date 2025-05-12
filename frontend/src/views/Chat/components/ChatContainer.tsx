@@ -1,17 +1,22 @@
-import { SelectedUserProfile } from "./SelectedUserProfile";
 import ChatHeadder from "./ChatHeadder";
 import { ConversationContainer } from "./ConversationContainer";
 import { MessageInput } from "./MessageInput";
+
 export const ChatContainer = () => {
   return (
-    <div className="flex-1 flex  ">
-      <div className="w-[900px] bg-[#33333366] h-full flex flex-col">
+    <div className="h-full flex flex-col bg-white">
+      <div className="flex-none">
         <ChatHeadder />
-        <ConversationContainer />
-        <MessageInput />
       </div>
-      <div>
-        <SelectedUserProfile />
+
+      <div className="flex-1 overflow-hidden relative">
+        <div className="absolute inset-0">
+          <ConversationContainer />
+        </div>
+      </div>
+
+      <div className="flex-none">
+        <MessageInput />
       </div>
     </div>
   );

@@ -9,28 +9,36 @@ export const ChatUsersmenu = () => {
   }, [getUsers]);
 
   return (
-    <div className="w-72 h-full bg-[#66666666]  space-y-[24px]">
-      <div className="p-4">
-        <h1 className="text-[#666666] text-2xl font-bold">Chats</h1>
+    <div className="w-80 h-full bg-white border-r border-gray-200 flex flex-col">
+      <div className="p-6 border-b border-gray-200">
+        <h1 className="text-2xl font-bold text-gray-800">Messages</h1>
+        <p className="text-sm text-gray-500 mt-1">Your conversations</p>
       </div>
-      <div>
+
+      <div className="flex-1 overflow-y-auto">
         {users.map((user, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedUser(user)}
-            className={`flex items-center gap-2 py-2 px-2 border-b border-[#66666670] hover:bg-[#66666666] cursor-pointer transition-all duration-300 ${
-              selectedUser?._id === user._id ? "bg-[#66666666]" : ""
+            className={`flex items-center gap-3 p-4 hover:bg-gray-50 cursor-pointer transition-all duration-200 ${
+              selectedUser?._id === user._id ? "bg-blue-50" : ""
             }`}
           >
-            <div>
+            <div className="relative">
               <img
                 src={user.profilePicture}
-                alt=""
-                className="w-10 h-10 rounded-full"
+                alt={user.userName}
+                className="w-12 h-12 rounded-full object-cover ring-2 ring-offset-2 ring-gray-100"
               />
+              <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
             </div>
-            <div>
-              <h1>{user.userName}</h1>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-sm font-medium text-gray-900 truncate">
+                {user.userName}
+              </h2>
+              <p className="text-xs text-gray-500 truncate">
+                Click to start chatting
+              </p>
             </div>
           </div>
         ))}

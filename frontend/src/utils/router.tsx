@@ -4,6 +4,7 @@ import SignUpScreen from "../views/SignUp/SignUpScreen";
 import ChatScreen from "../views/Chat/ChatScreen";
 import { ProtectedRoutes, PublicRoutes } from "./protectedRoutes";
 import LogInScreen from "../views/LogIn/LogInScreen";
+import WelcomeScreen from "../views/Welcome/WelcomeScreen";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
           {
             path: "*",
             element: <Navigate to="/signup" />,
+          },
+          {
+            path: "/",
+            element: <WelcomeScreen />,
           },
         ],
       },

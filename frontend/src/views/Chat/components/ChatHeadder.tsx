@@ -1,4 +1,3 @@
-import React from "react";
 import { useChatStore } from "../../../zustand/chat/chat.store";
 import { XIcon } from "../../../assets";
 

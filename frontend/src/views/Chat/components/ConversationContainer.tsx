@@ -3,12 +3,22 @@ import { useChatStore } from "../../../zustand/chat/chat.store";
 import { useAuthStore } from "../../../zustand/auth/auth.store";
 
 export const ConversationContainer = () => {
-  const { conversations, selectedUser, getConversations } = useChatStore();
+  const {
+    conversations,
+    selectedUser,
+    getConversations,
+    subscribeToMessages,
+    unSubscribeToMessages,
+  } = useChatStore();
   const { user } = useAuthStore();
   console.log(conversations);
   useEffect(() => {
     getConversations();
-  }, [getConversations]);
+    subscribeToMessages();
+    return () => {
+      unSubscribeToMessages();
+    };
+  }, [getConversations, subscribeToMessages, unSubscribeToMessages]);
 
   return (
     <div className="flex-1 h-full overflow-y-scroll flex flex-col gap-2 p-4">

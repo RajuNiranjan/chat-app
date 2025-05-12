@@ -17,6 +17,8 @@ export type ChatState = {
   setSelectedUser: (user: user | null) => void;
   getConversations: () => Promise<void>;
   sendMessage: (message: string) => Promise<void>;
+  subscribeToMessages: () => void;
+  unSubscribeToMessages: () => void;
 
 };
 

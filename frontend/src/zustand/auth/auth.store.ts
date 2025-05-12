@@ -1,20 +1,25 @@
 import { create } from 'zustand'
 import type { authState } from './type'
-import {axiosInstance} from '../../utils/axios'
+import { axiosInstance } from '../../utils/axios'
+import { io } from 'socket.io-client'
 
 
-export const useAuthStore = create<authState>((set) => ({
+const SOCKET_BASE_URL='http://localhost:8000'
+
+
+export const useAuthStore = create<authState>((set, get) => ({
     user: null,
     isAuthLoading: false,
     isLoginLoading: false,
     isSignupLoading: false,
     isLogoutLoading: false,
+    socket: null,
     signup: async (data) => {
         try {
-            
             set({ isSignupLoading: true })
             const res = await axiosInstance.post('/api/v1/auth/signup', data)
             set({ user: res.data })
+            get().connectSocket()
         } catch (error) {
             console.log(error);
         } finally {
@@ -26,6 +31,7 @@ export const useAuthStore = create<authState>((set) => ({
         set({ isLoginLoading: true })
             const res = await axiosInstance.post('/api/v1/auth/login', data)
             set({ user: res.data })
+            get().connectSocket()
         } catch (error) {
             console.log(error);
         } finally {
@@ -37,6 +43,7 @@ export const useAuthStore = create<authState>((set) => ({
             set({ isLogoutLoading: true })
             await axiosInstance.post('/api/v1/auth/logout')
             set({ user: null })
+            get().disConnectSocket()
         } catch (error) {
             console.log(error);
         } finally {
@@ -49,11 +56,35 @@ export const useAuthStore = create<authState>((set) => ({
             const res = await axiosInstance.get('/api/v1/auth/check-auth')
             set({ user: res.data })
             
+            get().connectSocket()
         } catch (error) {
             console.log(error);
         } finally {
-            set({isAuthLoading:false})
+            set({ isAuthLoading: false })
             
         }
-     }
+    },
+    connectSocket: async () => {
+        try {
+            const { user } = get()
+            if (!user || get().socket?.connected) return
+
+            const socket = io(SOCKET_BASE_URL, {
+                query: {
+                    userId: user._id
+                }
+            })
+            socket.connect()
+            set({ socket })
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+    },
+    disConnectSocket: async () => {
+        if (get().socket?.connected) {
+            get().socket?.disconnect()
+        }
+    }
 }))

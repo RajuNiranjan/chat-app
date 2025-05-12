@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { ChatState } from "./types";
 import {axiosInstance} from '../../utils/axios'
 import type { user } from "../auth/type";
+import {useAuthStore} from '../auth/auth.store'
 
 export const useChatStore = create<ChatState>((set, get) => ({
     users: [],
@@ -34,6 +35,37 @@ export const useChatStore = create<ChatState>((set, get) => ({
             
         }
     },
+     subscribeToMessages: () => {
+        try {
+            const { selectedUser } = get()
+            if (!selectedUser) return
+            
+            const socket = useAuthStore.getState().socket
+            console.log("Subscribing to messages with socket:", socket?.id)
+            console.log("Selected user:", selectedUser)
+
+            socket?.on("newMessage", (newMessage) => {
+                console.log("Received new message:", newMessage)
+                if (newMessage.senderId === selectedUser._id) {
+                    console.log("Adding message to conversations")
+                    set({conversations:[...get().conversations, newMessage]})
+                }
+            })
+
+        } catch (error) {
+            console.log(error);
+            
+        }
+    },
+    unSubscribeToMessages: () => {
+        try {
+            const {socket} = useAuthStore.getState()
+            socket?.off("newMessage")
+        } catch (error) {
+            console.log(error)
+        };
+                
+     },
     sendMessage: async (message: string) => {
         try {
             const {selectedUser} = get()
@@ -45,5 +77,6 @@ export const useChatStore = create<ChatState>((set, get) => ({
             console.log(error);
             
         }
-    }
+    },
+   
 }));

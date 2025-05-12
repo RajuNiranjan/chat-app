@@ -86,5 +86,17 @@ export const useAuthStore = create<authState>((set, get) => ({
         if (get().socket?.connected) {
             get().socket?.disconnect()
         }
+    },
+    updateProfile: async (data: FormData) => {
+        try {
+            const res = await axiosInstance.put('/api/v1/auth/update-profile', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            set({ user: res.data });
+        } catch (error) {
+            console.log(error);
+        }
     }
 }))

@@ -6,10 +6,9 @@ import { useRef, useState } from "react";
 
 const ChatScreen = () => {
   const { selectedUser } = useChatStore();
-  const { user, logout } = useAuthStore();
+  const { user, logout, updateProfile } = useAuthStore();
   const [showProfile, setShowProfile] = useState(false);
   const profileImgRef = useRef<HTMLInputElement>(null);
-  const [profilePicture, setProfilePicture] = useState<File | undefined>();
 
   const handleOpenFileSelector = () => {
     if (profileImgRef.current) {
@@ -20,8 +19,9 @@ const ChatScreen = () => {
   const handleUploadProfileImage = () => {
     if (profileImgRef.current?.files?.length) {
       const file = profileImgRef.current.files[0];
-      setProfilePicture(file);
-      console.log("File selected for upload:", file.name);
+      const formData = new FormData();
+      formData.append("profilePicture", file);
+      updateProfile(formData);
     }
   };
 

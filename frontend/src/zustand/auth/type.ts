@@ -20,6 +20,7 @@ export type authState = {
     checkAuth: () => Promise<void>;
     connectSocket: () => Promise<void>;
     disConnectSocket: () => Promise<void>;
+    updateProfile: (data: FormData) => Promise<void>;
 }
 
 

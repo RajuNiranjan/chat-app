@@ -1,4 +1,5 @@
 import { UserModel } from "../models/user.model.js";
+import cloudinary from "../utils/cloudinary.js";
 import { genToken } from "../utils/genToken.js";
 import bcrypt from "bcrypt";
 
@@ -79,6 +80,7 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
 export const logout = async (req, res, next) => {
   try {
     res.clearCookie("jwt");
@@ -117,6 +119,37 @@ export const checkAuth = async (req, res, next) => {
     delete userResponse.password;
 
     return res.status(200).json(userResponse);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    const dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    const result = await cloudinary.uploader.upload(dataURI, {
+      folder: "profile_pictures",
+    });
+
+    user.profilePicture = result.secure_url;
+    await user.save();
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json(userResponse);
   } catch (error) {
     console.log(error);
     next(error);

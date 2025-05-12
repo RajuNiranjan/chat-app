@@ -4,7 +4,7 @@ import { axiosInstance } from '../../utils/axios'
 import { io } from 'socket.io-client'
 
 
-const SOCKET_BASE_URL='http://localhost:8000'
+const SOCKET_BASE_URL=import.meta.env.MODE === 'development'?  'http://localhost:8000':"/"
 
 
 export const useAuthStore = create<authState>((set, get) => ({

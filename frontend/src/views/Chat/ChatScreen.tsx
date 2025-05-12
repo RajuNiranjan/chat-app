@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 
 const ChatScreen = () => {
   const { selectedUser } = useChatStore();
+  console.log("selcted user", selectedUser);
+
   const { user, logout, updateProfile } = useAuthStore();
   const [showProfile, setShowProfile] = useState(false);
   const profileImgRef = useRef<HTMLInputElement>(null);

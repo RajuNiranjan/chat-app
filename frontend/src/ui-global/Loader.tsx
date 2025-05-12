@@ -1,4 +1,3 @@
-import React from "react";
 import { Loader } from "../assets/index";
 
 export const Loading = () => {

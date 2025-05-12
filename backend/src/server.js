@@ -30,9 +30,11 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/chat", chatRouter);
 
 if (NODE_ENV === "production") {
+  // Serve static files first
   app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
-  app.get("/*", (req, res) => {
+  // Handle all other routes by serving index.html
+  app.get(/^(?!\/api\/v1).*/, (req, res) => {
     res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"));
   });
 }

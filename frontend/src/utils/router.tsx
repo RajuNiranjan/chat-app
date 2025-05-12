@@ -1,10 +1,13 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { App } from "../App";
-import SignUpScreen from "../views/SignUp/SignUpScreen";
-import ChatScreen from "../views/Chat/ChatScreen";
 import { ProtectedRoutes, PublicRoutes } from "./protectedRoutes";
-import LogInScreen from "../views/LogIn/LogInScreen";
-import WelcomeScreen from "../views/Welcome/WelcomeScreen";
+import { lazy, Suspense } from "react";
+import { Loading } from "../ui-global/Loader";
+
+const WelcomeScreen = lazy(() => import("../views/Welcome/WelcomeScreen"));
+const SignUpScreen = lazy(() => import("../views/SignUp/SignUpScreen"));
+const LogInScreen = lazy(() => import("../views/LogIn/LogInScreen"));
+const ChatScreen = lazy(() => import("../views/Chat/ChatScreen"));
 
 export const router = createBrowserRouter([
   {
@@ -12,32 +15,60 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        element: <PublicRoutes />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PublicRoutes />
+          </Suspense>
+        ),
         children: [
           {
             path: "signup",
-            element: <SignUpScreen />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <SignUpScreen />
+              </Suspense>
+            ),
           },
           {
             path: "login",
-            element: <LogInScreen />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <LogInScreen />
+              </Suspense>
+            ),
           },
           {
             path: "*",
-            element: <Navigate to="/signup" />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <Navigate to="/signup" />
+              </Suspense>
+            ),
           },
           {
             path: "/",
-            element: <WelcomeScreen />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <WelcomeScreen />
+              </Suspense>
+            ),
           },
         ],
       },
       {
-        element: <ProtectedRoutes />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ProtectedRoutes />
+          </Suspense>
+        ),
         children: [
           {
             path: "v1/chat/@me",
-            element: <ChatScreen />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <ChatScreen />
+              </Suspense>
+            ),
           },
         ],
       },
@@ -45,6 +76,10 @@ export const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Navigate to="/signup" />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Navigate to="/signup" />
+      </Suspense>
+    ),
   },
 ]);

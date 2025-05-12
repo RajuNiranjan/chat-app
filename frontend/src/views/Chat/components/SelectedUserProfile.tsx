@@ -22,6 +22,7 @@ export const SelectedUserProfile = () => {
           <div className="flex items-center p-4  backdrop-blur-sm justify-between w-full">
             <div className="w-10 h-10 rounded-full bg-white flex  items-center gap-1">
               <img
+                loading="lazy"
                 src={selectedUser?.profilePicture}
                 alt=""
                 className="w-full h-full object-cover rounded-full border border-white"
@@ -36,7 +37,12 @@ export const SelectedUserProfile = () => {
               </div>
             </div>
             <div>
-              <img src={XIcon} alt="" className="w-6 h-6 invert" />
+              <img
+                loading="lazy"
+                src={XIcon}
+                alt=""
+                className="w-6 h-6 invert"
+              />
             </div>
           </div>
         </div>

@@ -26,6 +26,7 @@ export const ChatUsersmenu = () => {
           >
             <div className="relative">
               <img
+                loading="lazy"
                 src={user.profilePicture}
                 alt={user.userName}
                 className="w-12 h-12 rounded-full object-cover ring-2 ring-offset-2 ring-gray-100"

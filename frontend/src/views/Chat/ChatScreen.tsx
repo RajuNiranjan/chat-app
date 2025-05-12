@@ -2,12 +2,28 @@ import { ChatUsersmenu } from "./components/ChatUsersmenu";
 import { ChatContainer } from "./components/ChatContainer";
 import { useChatStore } from "../../zustand/chat/chat.store";
 import { useAuthStore } from "../../zustand/auth/auth.store";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const ChatScreen = () => {
   const { selectedUser } = useChatStore();
   const { user, logout } = useAuthStore();
   const [showProfile, setShowProfile] = useState(false);
+  const profileImgRef = useRef<HTMLInputElement>(null);
+  const [profilePicture, setProfilePicture] = useState<File | undefined>();
+
+  const handleOpenFileSelector = () => {
+    if (profileImgRef.current) {
+      profileImgRef.current.click();
+    }
+  };
+
+  const handleUploadProfileImage = () => {
+    if (profileImgRef.current?.files?.length) {
+      const file = profileImgRef.current.files[0];
+      setProfilePicture(file);
+      console.log("File selected for upload:", file.name);
+    }
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -26,6 +42,7 @@ const ChatScreen = () => {
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <img
+                        loading="lazy"
                         src={user?.profilePicture}
                         alt={user?.userName}
                         className="w-12 h-12 rounded-full object-cover ring-2 ring-offset-2 ring-indigo-100"
@@ -151,8 +168,10 @@ const ChatScreen = () => {
 
       {/* User Profile Modal */}
       {showProfile && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div
+          className={`fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50 ease-in-out transition-all transform duration-300 opacity-100 `}
+        >
+          <div className="bg-white shadow-xl rounded-2xl p-6 w-full max-w-md">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Profile</h2>
               <button
@@ -176,11 +195,50 @@ const ChatScreen = () => {
             </div>
             <div className="space-y-6">
               <div className="flex flex-col items-center">
-                <img
-                  src={user?.profilePicture}
-                  alt={user?.userName}
-                  className="w-32 h-32 rounded-full object-cover ring-4 ring-indigo-100"
-                />
+                <div className="relative">
+                  <img
+                    loading="lazy"
+                    src={user?.profilePicture}
+                    alt={user?.userName}
+                    className="w-32 h-32 rounded-full object-cover ring-4 ring-indigo-100"
+                  />
+                  <div>
+                    <input
+                      type="file"
+                      className="hidden"
+                      ref={profileImgRef}
+                      onChange={handleUploadProfileImage}
+                      accept="image/*"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleOpenFileSelector}
+                      className="absolute bottom-0 right-0 bg-indigo-600 p-2 rounded-full text-white hover:bg-indigo-700 transition-colors duration-200 shadow-lg"
+                      title="Change profile picture"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
                 <h3 className="mt-4 text-xl font-semibold text-gray-900">
                   {user?.userName}
                 </h3>

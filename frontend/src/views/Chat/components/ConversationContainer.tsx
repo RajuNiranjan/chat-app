@@ -44,6 +44,7 @@ export const ConversationContainer = () => {
             {user?._id !== conversation.senderId && (
               <div className="flex flex-col items-center gap-1">
                 <img
+                  loading="lazy"
                   src={selectedUser?.profilePicture}
                   alt={selectedUser?.userName}
                   className="w-8 h-8 rounded-full object-cover"
@@ -76,6 +77,7 @@ export const ConversationContainer = () => {
             {user?._id === conversation.senderId && (
               <div className="flex flex-col items-center gap-1">
                 <img
+                  loading="lazy"
                   src={user?.profilePicture}
                   alt={user?.userName}
                   className="w-8 h-8 rounded-full object-cover"

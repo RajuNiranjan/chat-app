@@ -8,6 +8,7 @@ export const SideBar = () => {
       <div className="flex items-center justify-center">
         <img
           src={user?.profilePicture}
+          loading="lazy"
           alt="avatar"
           className="w-10 h-10 rounded-full border-2 border-white"
         />

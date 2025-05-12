@@ -68,7 +68,7 @@ export const MessageInput = () => {
             disabled={!message.trim()}
             className="p-3 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
           >
-            <img src={SendIcon} alt="Send" className="w-5 h-5" />
+            <img loading="lazy" src={SendIcon} alt="Send" className="w-5 h-5" />
           </button>
         </form>
       </div>

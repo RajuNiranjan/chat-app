@@ -34,6 +34,7 @@ const LogInScreen = () => {
         <div className="hidden md:flex md:w-1/2 bg-indigo-600 items-center justify-center p-12">
           <div className="text-center">
             <img
+              loading="lazy"
               src={GroupLogo}
               alt="Group Logo"
               className="w-48 h-48 mx-auto mb-8"
@@ -99,6 +100,7 @@ const LogInScreen = () => {
                         className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
                       >
                         <img
+                          loading="lazy"
                           src={showPassword ? EyeOpenIcon : EyeCloseIcon}
                           alt={showPassword ? "Hide password" : "Show password"}
                           className="w-4 h-4"
@@ -126,6 +128,7 @@ const LogInScreen = () => {
                     <div className="flex items-center justify-center gap-2">
                       <span>Logging in...</span>
                       <img
+                        loading="lazy"
                         src={Loader}
                         alt="Loading"
                         className="w-5 h-5 animate-spin"

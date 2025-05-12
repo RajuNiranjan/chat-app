@@ -8,6 +8,7 @@ export const ChatHeadder = () => {
       <div className="flex items-center gap-4">
         <div className="relative">
           <img
+            loading="lazy"
             src={selectedUser?.profilePicture}
             alt={selectedUser?.userName}
             className="w-12 h-12 rounded-full object-cover ring-2 ring-offset-2 ring-indigo-100"
@@ -59,7 +60,12 @@ export const ChatHeadder = () => {
           onClick={() => setSelectedUser(null)}
           className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
         >
-          <img src={XIcon} alt="Close chat" className="w-5 h-5 opacity-60" />
+          <img
+            loading="lazy"
+            src={XIcon}
+            alt="Close chat"
+            className="w-5 h-5 opacity-60"
+          />
         </button>
       </div>
     </div>

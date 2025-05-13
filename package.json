@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm install --prefix frontend && npm install --prefix backend && npm run build --prefix frontend",
-    "start": "npm run dev --prefix frontend & npm run start --prefix backend",
+    "start": "npm run start --prefix backend",
     "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "app:dev": "npm run dev --prefix frontend",
     "api:dev": "npm run dev --prefix backend"
@@ -21,5 +21,8 @@
     "url": "https://github.com/RajuNiranjan/chat-app/issues"
   },
   "homepage": "https://github.com/RajuNiranjan/chat-app#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
 }

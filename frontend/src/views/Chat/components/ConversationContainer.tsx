@@ -32,7 +32,7 @@ export const ConversationContainer = () => {
   return (
     <div className="h-full overflow-y-auto bg-gray-50">
       <div className="max-w-3xl mx-auto p-6 space-y-6 pb-20">
-        {conversations.map((conversation) => (
+        {conversations?.map((conversation) => (
           <div
             key={conversation._id}
             className={`flex items-end gap-3 ${

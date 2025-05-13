@@ -16,7 +16,7 @@ export const ChatUsersmenu = () => {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {users.map((user, idx) => (
+        {users?.map((user, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedUser(user)}
